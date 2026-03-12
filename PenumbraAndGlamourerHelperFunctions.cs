@@ -156,7 +156,7 @@ namespace PenumbraAndGlamourerHelpers
                 var glamourerDesignList = PenumbraAndGlamourerIpcWrapper.Instance.GetDesignList.Invoke();
                 return glamourerDesignList;
             }
-            catch (Exception e)
+            catch
             {
                 return new Dictionary<Guid, string>();
             }
@@ -182,7 +182,6 @@ namespace PenumbraAndGlamourerHelpers
         public static void SetClothingMod(string modelMod, ICollection<string> modelMods, Guid collection, bool disableOtherMods = true)
         {
             Log.Debug("Attempting to find mods that contain \"" + modelMod + "\" (Set Clothing Mod).");
-            int highestPriority = 10;
             foreach (string modName in modelMods)
             {
                 if (modName.ToLower().Contains(modelMod.ToLower()))
@@ -210,7 +209,6 @@ namespace PenumbraAndGlamourerHelpers
         public static Dictionary<string, object> GetChangedItemsForMod(string modelMod, ICollection<string> modelMods)
         {
             Log.Debug("Attempting to find mods that contain \"" + modelMod + "\" (Getting Changed Items).");
-            int lowestPriority = 10;
             foreach (string modName in modelMods)
             {
                 if (modName.ToLower().Contains(modelMod.ToLower()))
@@ -230,9 +228,7 @@ namespace PenumbraAndGlamourerHelpers
         }
         public static void SetDependancies(string modelMod, ICollection<string> modelMods, Guid collection, bool disableOtherMods = true)
         {
-            Dictionary<string, bool> alreadyDisabled = new Dictionary<string, bool>();
             Log.Debug("Attempting to find mod dependancies that contain \"" + modelMod + "\" (Set Dependancies).");
-            int lowestPriority = 10;
             foreach (string modName in modelMods)
             {
                 if (modName.ToLower().Contains(modelMod.ToLower()))
@@ -288,9 +284,9 @@ namespace PenumbraAndGlamourerHelpers
                         }
                     }
                 }
-                catch (Exception e)
+                catch (Exception ex)
                 {
-                    Log.Debug(e, e.Message);
+                    Log.Debug(ex, ex.Message);
                 }
             }
             return true;
@@ -314,12 +310,10 @@ namespace PenumbraAndGlamourerHelpers
         }
         public static void CleanSlate(Guid collection, ICollection<string> modelMods, ICollection<string> modelDepandacies)
         {
-            string foundModName = "";
             if (collection == Guid.Empty)
             {
                 collection = PenumbraAndGlamourerIpcWrapper.Instance.GetCollectionForObject.Invoke(0).EffectiveCollection.Id;
             }
-            Dictionary<string, bool> alreadyDisabled = new Dictionary<string, bool>();
             foreach (string modName in modelMods)
             {
                 if (CheckIfValidToChange(modName, modelMods))
